@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import imgaug
 
 # Root directory of the project
-ROOT_DIR = "D:/maskrcnn"
+ROOT_DIR = "D:\maskrcnn"
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -35,7 +35,7 @@ class CustomConfig(Config):
 
 
     # NUMBER OF GPUs to use. When using only a CPU, this needs to be set to 1.
-    GPU_COUNT = 1
+    GPU_COUNT = 2
     
     # We use a GPU with 12GB memory, which can fit two images.
     # Adjust down if you use a smaller GPU.
@@ -72,6 +72,7 @@ class CustomDataset(utils.Dataset):
      
         # Train or validation dataset?
         assert subset in ["train", "val"]
+        #print(subset)
         dataset_dir = os.path.join(dataset_dir, subset)
 
         # Load annotations
@@ -90,13 +91,19 @@ class CustomDataset(utils.Dataset):
         # }
         # We mostly care about the x and y coordinates of each region
         annotations1 = json.load(open('D:/maskrcnn/Dataset/train/train.json'))
-        # print(annotations1)
-        annotations = list(annotations1.values())  # don't need the dict keys
-
+        annotations2 = json.load(open('D:/maskrcnn/Dataset/val/val.json'))
+        #print("\n" + str(annotations1) + "\n")
+        if str(subset) == "train":
+            annotations = list(annotations1.values())  # don't need the dict keys
+        else:
+            annotations = list(annotations2.values())  # don't need the dict keys
         # The VIA tool saves images in the JSON even if they don't have any
         # annotations. Skip unannotated images.
         annotations = [a for a in annotations if a['regions']]
-        
+        # print(subset)
+        # print(annotations)
+        # if str(subset) != "train":
+        #     sys.exit("aaaaa")
         # Add images
         for a in annotations:
             # print(a)
@@ -115,7 +122,8 @@ class CustomDataset(utils.Dataset):
             # load_mask() needs the image size to convert polygons to masks.
             # Unfortunately, VIA doesn't include it in JSON, so we must read
             # the image. This is only managable since the dataset is tiny.
-            print("numids",num_ids)
+            #print("numids",num_ids)
+            # print(subset + " " + dataset_dir + " " + a['filename'])
             image_path = os.path.join(dataset_dir, a['filename'])
             image = skimage.io.imread(image_path)
             height, width = image.shape[:2]
