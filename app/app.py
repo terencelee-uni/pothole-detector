@@ -10,7 +10,7 @@ def get_immediate_subdirectories(a_dir): #only grab dirs no recursion
             if os.path.isdir(os.path.join(a_dir, name))]
 
 
-def imageProcess():
+def imageProcess(flag):
     subDir = get_immediate_subdirectories("data")
 
     potholeDetected = []
@@ -35,7 +35,13 @@ def key_capture_thread(): #exit inf loop on keypress
     keep_going = False
 
 def main():
-    getInput() # Start grabbing frames from camera and GPS store to /data/
+    video.lower() = input('Webcam or pre-recorded?\n')
+    if(video == "webcam"):
+        getInput(1, "")
+    else:
+        vidPath = input("Input relative path to pre-recorded video:\n")
+        getInput(0, vidPath)
+     # Start grabbing frames from camera and GPS store to /data/
 
     th.Thread(target=key_capture_thread, args=(), name='key_capture_thread', daemon=True).start()
     while keep_going:
