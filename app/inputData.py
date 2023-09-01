@@ -20,11 +20,29 @@ def getInput():
             print("Can't receive frame (stream end?). Exiting ...")
             cap.release()
             break
+        oldLat = 0.0
+        oldLon = 0.0
+        direction = ""
         if frameCounter % abs(fps/2) == 0:  # 2 frames per second
             gps = getGPS()
+            latDiff = gps.split("-")[1][:-3] - oldLat   #track direction traveling
+            lonDiff = gps.split("-")[2] - oldLon
+            if abs(latDiff) > abs(lonDiff):
+                if latDiff > 0:
+                    direction = "North"
+                else:
+                    direction = "South"
+            else:
+                if lonDiff > 0:
+                    direction = "East"
+                else:
+                    direction = "West"
+
+            oldLat = gps.split("-")[1][:-3]
+            oldLon = gps.split("-")[2]
             dateTime = datetime.now().strftime("%H:%M") + "-" + date.today()
             #cv2.imshow()
-            cv2.imwrite("data/%s/" % cluster + "." + dateTime + "." + gps + "." + "frame%d" + ".jpg" % int(frame/(fps/2)), frame)
+            cv2.imwrite("data/%s/" % cluster + "." + dateTime + "." + direction + "." + gps + "." + "frame%d" + ".jpg" % int(frame/(fps/2)), frame)
         if cv.waitKey(1) == ord('q'):
             break
         # When everything done, release the capture

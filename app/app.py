@@ -21,14 +21,11 @@ def imageProcess():
         if len(out) > 0:
             for z in out:
                 temp = z.split("mask")[1]  #get orig image name
-                clusterImages.append([temp,[temp[1],temp[2],temp[3]]])    # type format [raw image path, [datetime, gps, frame]]
+                clusterImages.append([temp,[temp[1],temp[2],temp[3],temp[4]]])    # type format [raw image path, [datetime, direction, gps, frame]]
 
         potholeDetected.append(clusterImages)
     
     return potholeDetected
-        
-        
-
 
 
 keep_going = True
@@ -47,13 +44,14 @@ def main():
 
     images = imageProcess()  # Recording finished, parse captured frames and run detection
     for x in images:
-        lat = x[1][1].split("-")[1][:-3]
-        lon = x[1][1].split("-")[2]
+        lat = x[1][2].split("-")[1][:-3]
+        lon = x[1][2].split("-")[2]
+        direction = x[1][1]
         print("Pothole detected at Date/Time - %s, Lat: %s Long: %s - Name: %s\n See below for safety rating\n" % (x[1][0],lat,lon,x[0]))
         rating = safety(x[0], "mask"+x[0])
 
         if rating >= 0.7:
             print("Pothole has failed safety check, submitting relevant information to Department of Transit")
-            submit(x[0], "mask"+x[0], lat, lon, x[1][0])
+            submit(x[0], "mask"+x[0], lat, lon, x[1][0], direction)
 
 main() #run main loop
