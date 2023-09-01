@@ -21,9 +21,10 @@ def getInput():
             cap.release()
             break
         if frameCounter % abs(fps/2) == 0:  # 2 frames per second
+            gps = getGPS()
             dateTime = datetime.now().strftime("%H:%M") + "-" + date.today()
             #cv2.imshow()
-            cv2.imwrite("data/%s/" % cluster + dateTime + "frame%d.jpg" % int(frame/(fps/2)), frame)
+            cv2.imwrite("data/%s/" % cluster + "." + dateTime + "." + gps + "." + "frame%d" + ".jpg" % int(frame/(fps/2)), frame)
         if cv.waitKey(1) == ord('q'):
             break
         # When everything done, release the capture

@@ -55,7 +55,7 @@ def classify(ddir):
 
         masks = outputs[0]['instances'].pred_masks  #output binary masks from image
         if len(masks) > 0:
-            combinedMask = functools.reduce(lambda a, b: a|b, masks) #logical or to combine binary masks
+            combinedMask = functools.reduce(lambda a, b: a|b, masks) #logical OR to combine binary masks
             cvs.imwrite(data_dir+'mask'+filename, combinedMask)  #write to mask file
             outFiles.append(str(data_dir+'mask'+filename))    
 

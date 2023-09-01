@@ -1,1 +1,1 @@
-def safety(raw, mask, cluster): #safety analysis basked on bit mask
+def safety(raw, mask): #safety analysis basked on bit mask
