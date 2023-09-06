@@ -37,17 +37,20 @@ def key_capture_thread(): #exit inf loop on keypress
 def main():
     video.lower() = input('Webcam or pre-recorded?\n')
     if(video == "webcam"):
-        getInput(1, "")
+        videoThread = Thread(target=getInput, arg=(1, ""))
+        getInput()
     else:
         vidPath = input("Input relative path to pre-recorded video:\n")
-        getInput(0, vidPath)
+        videoThread = Thread(target=getInput, arg=(1, vidPath))
+        
+    videoThread.start()
      # Start grabbing frames from camera and GPS store to /data/
 
     th.Thread(target=key_capture_thread, args=(), name='key_capture_thread', daemon=True).start()
     while keep_going:
         event.wait(60)  # Check in every minute
         logging.debug("Capture still running")
-
+    videoThread
     images = imageProcess()  # Recording finished, parse captured frames and run detection
     for x in images:
         lat = x[1][2].split("-")[1][:-3]

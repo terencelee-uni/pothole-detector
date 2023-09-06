@@ -4,6 +4,8 @@ import cv2 as cv
 from datetime import datetime, date
 
 def getInput(flag, vidPath): #flag determines whether pre-recorded video or live video feed
+    global keep_going   #set interrupt flag
+
     if(flag):
         cap = cv.VideoCapture(0)
     else:
@@ -15,6 +17,9 @@ def getInput(flag, vidPath): #flag determines whether pre-recorded video or live
         print("Cannot open camera")
         exit()
     while True:
+        if not keep_going:
+            cap.release()
+            break
         cluster = date.today() + "-" + datetime.now().strftime("%H")
         # Capture frame-by-frame
         ret, frame = cap.read()
