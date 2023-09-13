@@ -8,3 +8,5 @@
 /dataset
 /train/output
 /app/data
+webdriver-manager
+selenium
