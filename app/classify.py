@@ -53,6 +53,8 @@ def classify(ddir):
 
     outFiles = []
     for filename in os.listdir(data_dir):
+        if filename[0:4] == "mask":
+            continue
         im = cv2.imread(data_dir + "/" + filename)
         outputs = predictor(im)  # format is documented at https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
         v = Visualizer(im[:, :, ::-1],
@@ -64,7 +66,7 @@ def classify(ddir):
         cv2.imshow(filename, out.get_image()[:, :, ::-1])
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-        cv2.imwrite(data_dir+'|mask|'+filename, out.get_image()[:, :, ::-1])  #write to mask file
+        cv2.imwrite(data_dir+'/mask|'+filename, out.get_image()[:, :, ::-1])  #write to mask file
         outFiles.append(str(data_dir+'|classified|'+filename)) 
 
         masks = outputs['instances'].pred_masks  #output binary masks from image
@@ -84,4 +86,4 @@ def classify(ddir):
     # print(inference_on_dataset(predictor.model, val_loader, evaluator))
     # another equivalent way to evaluate the model is to use `trainer.test`
 
-# classify("2023-09-13|03")
+classify("2023-09-13|03")

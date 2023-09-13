@@ -35,8 +35,8 @@ def getInput(flag, vidPath): #flag determines whether pre-recorded video or live
         if frameCounter % abs(fps/2) == 0:  # 2 frames per second
             gps = getGPS()
             counter += 1
-            latDiff = gps.split("-")[1][:-3] - oldLat   #track direction traveling
-            lonDiff = gps.split("-")[2] - oldLon
+            latDiff = gps.split("|")[0] - oldLat   #track direction traveling
+            lonDiff = gps.split("|")[1] - oldLon
             if abs(latDiff) > abs(lonDiff):
                 if latDiff > 0:
                     direction = "North"
@@ -49,8 +49,8 @@ def getInput(flag, vidPath): #flag determines whether pre-recorded video or live
                     direction = "West"
             if counter == 60:    #update direction once every 30 seconds
                 counter = 0
-                oldLat = gps.split("-")[1][:-3]
-                oldLon = gps.split("-")[2]
+                oldLat = gps.split("|")[0]
+                oldLon = gps.split("|")[1]
             dateTime = str(datetime.now().strftime("%H:%M")) + "|" + str(date.today())
             #cv2.imshow()
             cv2.imwrite("data/%s/" % cluster + dateTime + "|" + direction + "|" + gps + "|" + "frame%d" + ".jpg" % int(frameCounter/(fps/2)), frame)
@@ -65,4 +65,4 @@ def getInput(flag, vidPath): #flag determines whether pre-recorded video or live
 def getGPS():   # google maps gps search works [Lat, Longitude] https://gpsd.gitlab.io/gpsd/gpsd.html#_logging
     with GPSDClient() as client:    #gpsd py library
         for result in client.dict_stream(convert_datetime=True, filter=["TPV"]):
-            return "Lat-%sLon-%s" % (result.get("lat", "n/a"), result.get("lon", "n/a"))
+            return "%s|%s" % (result.get("lat", "n/a"), result.get("lon", "n/a"))
