@@ -7,3 +7,4 @@
 *.png
 /dataset
 /train/output
+/app/data

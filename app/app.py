@@ -53,8 +53,8 @@ def main():
     videoThread
     images = imageProcess()  # Recording finished, parse captured frames and run detection
     for x in images:
-        lat = x[1][2].split("-")[1][:-3]
-        lon = x[1][2].split("-")[2]
+        lat = x[1][2].split("|")[1][:-3]
+        lon = x[1][2].split("|")[2]
         direction = x[1][1]
         print("Pothole detected at Date/Time - %s, Lat: %s Long: %s - Name: %s\n See below for safety rating\n" % (x[1][0],lat,lon,x[0]))
         rating = safety(x[0], "mask"+x[0])

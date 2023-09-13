@@ -20,7 +20,7 @@ def getInput(flag, vidPath): #flag determines whether pre-recorded video or live
         if not keep_going:
             cap.release()
             break
-        cluster = date.today() + "-" + datetime.now().strftime("%H")
+        cluster = str(date.today()) + "|" + datetime.now().strftime("%H")
         # Capture frame-by-frame
         ret, frame = cap.read()
         # if frame is read correctly ret is True
@@ -51,9 +51,9 @@ def getInput(flag, vidPath): #flag determines whether pre-recorded video or live
                 counter = 0
                 oldLat = gps.split("-")[1][:-3]
                 oldLon = gps.split("-")[2]
-            dateTime = datetime.now().strftime("%H:%M") + "-" + date.today()
+            dateTime = str(datetime.now().strftime("%H:%M")) + "|" + str(date.today())
             #cv2.imshow()
-            cv2.imwrite("data/%s/" % cluster + "." + dateTime + "." + direction + "." + gps + "." + "frame%d" + ".jpg" % int(frame/(fps/2)), frame)
+            cv2.imwrite("data/%s/" % cluster + dateTime + "|" + direction + "|" + gps + "|" + "frame%d" + ".jpg" % int(frameCounter/(fps/2)), frame)
         if cv.waitKey(1) == ord('q'):
             break
         # When everything done, release the capture
